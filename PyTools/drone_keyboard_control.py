@@ -71,7 +71,19 @@ while True:
     # 设置速度控制以及设置偏航控制(存在一定问题，大家测试过才知道)
     AirSim_client.moveByVelocityBodyFrameAsync(vx=velocity_x, vy=velocity_y, vz=velocity_z, duration=0.02,
                                                yaw_mode=airsim.YawMode(True, yaw_or_rate=yaw_rate), vehicle_name=vehicle_name)
+    # Get the current state of the drone
+    drone_state = AirSim_client.getMultirotorState(vehicle_name=vehicle_name)
 
+    # Get the barometer readings
+    barometer_data = AirSim_client.getBarometerData(vehicle_name=vehicle_name)
+
+    # print(f"\rExpectation gesture: {velocity_x}, {velocity_y}, {velocity_z}, {yaw_rate}", end='')
+    # print(f"\rCurrent gesture: {drone_state.kinematics_estimated.linear_velocity.x_val}, {drone_state.kinematics_estimated.linear_velocity.y_val}, {drone_state.kinematics_estimated.linear_velocity.z_val}, {drone_state.kinematics_estimated.angular_velocity.z_val}", end='')
+    print(f"\rCur pos: "
+          f"{drone_state.kinematics_estimated.position.x_val: .2f}, "
+          f"{drone_state.kinematics_estimated.position.y_val: .2f}, "
+          f"{drone_state.kinematics_estimated.position.z_val: .2f}, "
+          f"baro alt: {barometer_data.altitude: .2f}", end='')
     # press 'Esc' to quit
     if scan_wrapper[pygame.K_ESCAPE]:
         pygame.quit()
